@@ -1,103 +1,79 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <button @click="connect()"></button>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div  id="app">
+    <img alt="Vue logo" src="https://tarazgroup.com/template/pr_tarazgroup/img/logo.png" @click="connect2()">
+    <notifications ></notifications>
+    <HelloWorld msg="Welcome to Your Voip App"/>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-// import SockJS from "sockjs-client";
-//import Stomp from "webstomp-client";
-
+import Notifications from '@voerro/vue-notifications'
+import notify from '@voerro/vue-notifications/src/interface';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HelloWorld,
+    Notifications
   },
-
-  methods :{
-        send() {
-    //  console.log("Send message:" + this.send_message);
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = 'test'
-        alert(JSON.stringify(msg));
-        this.stompClient.send("/ws/start", JSON.stringify(msg), {});
-      }
-    },
-    connect(){
-        const socket = new WebSocket('ws://localhost:8080/my-websocket-endpoint');
-socket.onopen = function() {
-  alert('WebSocket connection opened. Ready to send messages.');
- 
-  socket.send('Hello, from WebSocket client!');
-};
- 
-socket.onmessage = function(message) {
-  console.log('Message received from server: ' + message.data);
-};
+ data() {
+    return {
+      test: null
     }
   },
-  mounted(){
-           const socket = new WebSocket('ws://localhost:8080/my-websocket-endpoint');
-socket.onopen = function() {
-  alert('WebSocket connection opened. Ready to send messages.');
+  methods :{
+    connect(){
+   const socket = new WebSocket('ws://localhost:8080/my-websocket-endpoint');
+   socket.onopen = function() {
+ //   alert('WebSocket connection opened. Ready to send messages.');
  
   socket.send('Hello, from WebSocket client!');
 };
  
+  },
+  connect2(){
+    // alert('a')
+ const socket = new WebSocket('ws://localhost:8080/my-websocket-endpoint');
 socket.onmessage = function(message) {
- alert('Message received from server: ' + message.data);
-};
-    
-       
-    //  console.log("Send message:" + this.send_message);
-//      const socket = SockJS('http://localhost:8080/my-websocket-endpoint')
-//     //  const socket = new WebSocket('ws://http://localhost:8080/test')
-//     // const socket = new WebSocket('ws://' + 'http://localhost:8080' + '/test')
-// // var socket = new WebSocket('ws://localhost:8080/my-websocket-endpoint');
+ //alert('Message received from server: ' + message.data);
+//  const self = this
 
-    
-// // Add an event listener for when a connection is open
-// socket.onopen = function() {
-//   alert('WebSocket connection opened. Ready to send messages.');
+  
+  if(message.data == 'null'){
+    console.log('MESSAGE WAS NULL'+ message.data);
+  } else {
+    this.test = message.data
  
-//   // Send a message to the server
-//   socket.send('Hello, from WebSocket client!');
-// };
- 
-// // Add an event listener for when a message is received from the server
-// socket.onmessage = function(message) {
-//   console.log('Message received from server: ' + message);
-// };
-    // this.stompClient = Stomp.over(socket)
-    // // stompClient.connect({},Frame => 
-    // // console.log(Frame))
-    //       this.stompClient.connect(
-    //     {},
-    //     frame => {
-    //     //  this.connected = true;
-    //       console.log(frame.body.content);
-    //       console.log(document.URL);
-    //       this.stompClient.subscribe("/messages", tick => {
-    //       alert("tickkk" + tick);
-    //       console.log(JSON.parse(tick.body).content);
-    //       });
-    //     },
-    //     // error => {
-    //     //   console.log(error);
-    //     //  // this.connected = false;
-    //     // }
-    //   )
-    //     // const msg = 'test'
-    //     // alert(JSON.stringify(msg));
-    //     // this.stompClient.send("/ws/send", {});
-    
-     }
+  // let number = 1
+  
+   notify(message.data)
+   return;
+  //  number = number +1
+// console.log(number);
+
+  
+  }
+
+};
+
+  },    
+     },
+mounted: function () {
+  window.setInterval(() => {
+    this.connect2()
+  }, 2000)
+},
+  watch:{
+     test:{
+     handler(newVal) {
+      if (newVal.includes('null')) {
+        notify('call ended')
+      }}
 
   }
+  }
+}
 </script>
 
 <style>
