@@ -1,8 +1,8 @@
 <template>
   <div  id="app">
     <img alt="Vue logo" src="https://tarazgroup.com/template/pr_tarazgroup/img/logo.png" @click="connect2()">
-    <notifications ></notifications>
-    <HelloWorld msg="Welcome to Your Voip App"/>
+    <notifications style="direction:rtl" ></notifications>
+    <HelloWorld msg="به سامانه ویپ تراز خوش آمدید"/>
   </div>
 </template>
 
@@ -41,13 +41,20 @@ socket.onmessage = function(message) {
 
   
   if(message.data == 'null'){
-    console.log('MESSAGE WAS NULL'+ message.data);
+    //console.log('MESSAGE WAS NULL'+ message.data);
   } else {
     this.test = message.data
  
   // let number = 1
   
-   notify(message.data)
+  //  notify(message.data)
+
+notify({
+    text: message.data,
+    theme: 'blue',
+    hideafter: 500
+});
+
    return;
   //  number = number +1
 // console.log(number);
@@ -62,7 +69,7 @@ socket.onmessage = function(message) {
 mounted: function () {
   window.setInterval(() => {
     this.connect2()
-  }, 2000)
+  }, 1000)
 },
   watch:{
      test:{
