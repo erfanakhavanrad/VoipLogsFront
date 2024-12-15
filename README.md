@@ -1,3 +1,6 @@
+## Project Summary:
+This project uses a socket to get VOIP system info from the back-end system and show them.
+
 # voip_notifs
 
 ## Project setup
